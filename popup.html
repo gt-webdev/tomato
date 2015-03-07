@@ -1,0 +1,50 @@
+<!doctype html>
+<!--
+ This page is shown when the extension button is clicked, because the
+ "browser_action" field in manifest.json contains the "default_popup" key with
+ value "popup.html".
+ -->
+<html>
+  <head>
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Tomato</h1><small>Your Pomodoro Helper</small>
+      <div class="setting-section">
+        <h2>Pomodoro</h2>
+        <div class="time-buttons-group">
+          <button type="button">15</button>
+          <button type="button">25</button>
+          <button type="button">45</button>
+        </div>
+        <p>minutes</p>
+      </div>
+      <div class="setting-section">
+        <h2>Breaks</h2>
+        <h3>Short</h3>
+        <div class="time-buttons-group">
+          <button type="button">5</button>
+          <button type="button">10</button>
+          <button type="button">15</button>
+        </div>
+        <p>minutes</p>
+        <h3>Long</h3>
+        <div class="time-buttons-group">
+          <button type="button">15</button>
+          <button type="button">20</button>
+          <button type="button">30</button>
+        </div>
+        <p>minutes</p>
+      </div>
+      <button type="button" id="timer-start">Start</button>
+    </div>
+  </body>
+</html>
+
