@@ -1,0 +1,31 @@
+<!doctype html>
+<html>
+  <head>
+    <!--
+      - JavaScript and HTML must be in separate files: see our Content Security
+      - Policy documentation[1] for details and explanation.
+      -
+      - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
+     -->
+    <script src="popup.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h1>Tomato</h1><small>Your Pomodoro Helper</small>
+      <div id="current-state">
+        <h2>22:00</h2>
+      </div>
+      <div id="next-state">
+        <p>short break in <span>3:00</span></p>
+      </div>
+      <div id="controls">
+        <div class="controls-buttons-group">
+          <button type="button">stop</button>
+          <button type="button">pause</button>
+          <button type="button">next</button>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
+
