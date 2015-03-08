@@ -7,7 +7,6 @@
 
 	"browser_action": {
 		"default_icon": "icon.png",
-		"default_popup": "timer.html",
 		"default_title": "Tomato: Your Pomodoro Timer"
 	},
 	"background": {

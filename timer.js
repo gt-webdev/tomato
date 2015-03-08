@@ -1,6 +1,6 @@
 function init() {
-	addOnClick();
 	addMessageListeners();
+	startTimer();
 }
 
 function startTimer() {
@@ -22,12 +22,6 @@ function addMessageListeners() {
 				break;
 		}
 	});
-}
-
-function addOnClick() {
-	document.getElementById("start").onclick = function() {
-		startTimer();
-	}
 }
 
 document.addEventListener('DOMContentLoaded', init);
