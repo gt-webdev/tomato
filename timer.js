@@ -1,4 +1,5 @@
 function init() {
+	addOnClick();
 	addMessageListeners();
 	startTimer();
 }
@@ -22,6 +23,14 @@ function addMessageListeners() {
 				break;
 		}
 	});
+}
+
+function addOnClick() {
+	document.getElementById("stop").onclick = function() {
+		chrome.runtime.sendMessage({
+			"command": "endTimer"
+		});
+	}
 }
 
 document.addEventListener('DOMContentLoaded', init);

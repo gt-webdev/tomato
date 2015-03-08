@@ -5,9 +5,9 @@ function PomodoroState() {
 	this.opt = {
 		type: "basic",
 		title: "Time for a break!",
-		message: "Your break period will start in 10 seconds. Click this notification to keep working instead.",
+		message: "Your break period will start in 10 seconds.",
 		iconUrl: "icon.png"
 	};
 	this.notificationBaseId = "pomodoroOver";
-
+	this.nextState = 2;
 }

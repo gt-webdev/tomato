@@ -4,10 +4,11 @@ var timerStates = [
 	new BreakState()];
 var stateInd = 0;
 var currentState = timerStates[stateInd];
+var timer;
 
 function startTimer() {
 	var start = moment();
-	var runningTimer = setInterval(function() {
+	timer = setInterval(function() {
 	    var difference = moment().diff(start, 'seconds');
 	    if (difference > currentState.length) {
 	    	stopTimer(runningTimer);
@@ -17,10 +18,10 @@ function startTimer() {
 	}, 1000);
 }
 
-function stopTimer(timer) {
+function stopTimer() {
 	clearInterval(timer);
 	notifyUser();
-	changeState(false);
+	changeToNextState(false);
 	chrome.runtime.sendMessage({
 		command: "timerEnded"
 	});
@@ -42,18 +43,22 @@ function notifyUser() {
 	}); // Callback function as 3rd parameter is required.
 }
 
-function changeState(isInitial) {
-	stateInd = (stateInd + 1) % timerStates.length;
-	currentState = timerStates[stateInd]
-	console.log(stateInd);
+function changeToNextState(isInitial) {
+	nextStateInd = currentState.nextState || (stateInd + 1) % timerStates.length;
+	changeState(nextStateInd);
+}
+
+function changeState(nextStateInd, isDelayed) {
+	stateInd = nextStateInd;
+	currentState = timerStates[stateInd];
 	chrome.browserAction.setPopup({
 		"popup": currentState.html
 	});
-	console.log(currentState.hasOwnProperty("length"));
+
 	// We know it's a time period of some sort.
 	if (currentState.hasOwnProperty("length")) {
 		// Delay?
-		if (!isInitial) {
+		if (isDelayed) {
 			setTimeout(startTimer, currentState.delay*1000);
 		}
 		else startTimer();
@@ -67,8 +72,14 @@ chrome.browserAction.setPopup({
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if (request.command == "startTimer" && stateInd == 0) {
-			changeState(true);
+			changeToNextState(true);
 			sendResponse({message: "Timer started."});
 		}
-
+		else if (request.command == "endTimer" && stateInd != 0) {
+			clearInterval(timer);
+			changeState(0, false); // Change to off state
+			chrome.runtime.sendMessage({
+				command: "timerEnded"
+			});
+		}
 	});
