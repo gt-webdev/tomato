@@ -10,7 +10,7 @@
 		"default_title": "Tomato: Your Pomodoro Timer"
 	},
 	"background": {
-		"scripts": ["moment.js", "background.js"],
+		"scripts": ["pomodoroState.js", "breakState.js", "moment.js", "background.js"],
 		"persistent": false
 	},
 	"permissions": [
