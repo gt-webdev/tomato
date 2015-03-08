@@ -1,10 +1,27 @@
 function init() {
-	var start = moment();
-	setInterval(function() {
-	    var difference = moment().diff(start, 'seconds');
-	    var text = moment().startOf("day").seconds(difference).format("m:ss");
-	    document.getElementById("current-time").innerText = text;
-	}, 1000);
+	addMessageListeners();
+	startTimer();
+}
+
+function startTimer() {
+	chrome.runtime.sendMessage({
+		"command": "startTimer"
+	}, function(response) {
+		console.log(response.message);
+	});
+}
+
+function addMessageListeners() {
+	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
+		switch(request.command) {
+			case "updateTime":
+				document.getElementById("current-time").innerText = request.time;
+				break;
+			case "timerEnded":
+				console.log("Timer ended.");
+				break;
+		}
+	});
 }
 
 document.addEventListener('DOMContentLoaded', init);

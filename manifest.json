@@ -10,6 +10,10 @@
 		"default_popup": "timer.html",
 		"default_title": "Tomato: Your Pomodoro Timer"
 	},
+	"background": {
+		"scripts": ["moment.js", "background.js"],
+		"persistent": false
+	},
 	"permissions": [
 	]
 }
