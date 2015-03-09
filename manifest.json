@@ -15,8 +15,5 @@
 	},
 	"permissions": [
 		"notifications"
-	],
-	"web_accessible_resources": [
-		"icon.png"
 	]
 }
