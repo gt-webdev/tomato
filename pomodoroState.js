@@ -1,5 +1,7 @@
 function PomodoroState() {
-	this.length = 10;
+	this.length = function() {
+		return localStorage["pomodoro-selection"] || 10;
+	}
 	this.delay = 10;
 	this.html = "timer.html";
 	this.opt = {

@@ -5,13 +5,14 @@ var timerStates = [
 var stateInd = 0;
 var currentState = timerStates[stateInd];
 var timer;
+var timeout;
 
 function startTimer() {
 	var start = moment();
 	timer = setInterval(function() {
 	    var difference = moment().diff(start, 'seconds');
-	    if (difference > currentState.length) {
-	    	stopTimer(runningTimer);
+	    if (difference > currentState.length()) {
+	    	stopTimer(timer);
 	    	return;
 	    }
 	    sendUpdatedTime(difference);
@@ -20,8 +21,9 @@ function startTimer() {
 
 function stopTimer() {
 	clearInterval(timer);
+	timer = null;
 	notifyUser();
-	changeToNextState(false);
+	changeToNextState(true);
 	chrome.runtime.sendMessage({
 		command: "timerEnded"
 	});
@@ -43,9 +45,9 @@ function notifyUser() {
 	}); // Callback function as 3rd parameter is required.
 }
 
-function changeToNextState(isInitial) {
+function changeToNextState(isDelayed) {
 	nextStateInd = currentState.nextState || (stateInd + 1) % timerStates.length;
-	changeState(nextStateInd);
+	changeState(nextStateInd, isDelayed);
 }
 
 function changeState(nextStateInd, isDelayed) {
@@ -59,7 +61,7 @@ function changeState(nextStateInd, isDelayed) {
 	if (currentState.hasOwnProperty("length")) {
 		// Delay?
 		if (isDelayed) {
-			setTimeout(startTimer, currentState.delay*1000);
+			timeout	= setTimeout(startTimer, currentState.delay*1000);
 		}
 		else startTimer();
 	}
@@ -72,11 +74,14 @@ chrome.browserAction.setPopup({
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		if (request.command == "startTimer" && stateInd == 0) {
-			changeToNextState(true);
+			changeToNextState(false);
 			sendResponse({message: "Timer started."});
 		}
 		else if (request.command == "endTimer" && stateInd != 0) {
-			clearInterval(timer);
+			if (timer) clearInterval(timer);
+			if (timeout) clearTimeout(timeout);
+			timeout = null;
+			timer = null;
 			changeState(0, false); // Change to off state
 			chrome.runtime.sendMessage({
 				command: "timerEnded"
