@@ -1,9 +1,15 @@
+/**
+ * Initially called when extension page loads. Sets up a bunch of stuff.
+ */
 function init() {
 	addOnClick();
 	addMessageListeners();
 	startTimer();
 }
 
+/**
+ * Sends a message to background page to start the timer.
+ */
 function startTimer() {
 	chrome.runtime.sendMessage({
 		"command": "startTimer"
@@ -12,6 +18,9 @@ function startTimer() {
 	});
 }
 
+/**
+ * Adds listeners so it knows how to handle the messages from the background page.
+ */
 function addMessageListeners() {
 	chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
 		switch(request.command) {
@@ -25,6 +34,9 @@ function addMessageListeners() {
 	});
 }
 
+/**
+ * Adds onclick listener to the stop button.
+ */
 function addOnClick() {
 	document.getElementById("stop").onclick = function() {
 		chrome.runtime.sendMessage({
