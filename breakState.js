@@ -11,5 +11,5 @@ function BreakState() {
 		iconUrl: "icon.png"
 	};
 	this.notificationBaseId = "breakOver";
-	this.nextState = 1;
+	this.nextState = "pomodoro";
 }

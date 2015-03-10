@@ -11,5 +11,5 @@ function PomodoroState() {
 		iconUrl: "icon.png"
 	};
 	this.notificationBaseId = "pomodoroOver";
-	this.nextState = 2;
+	this.nextState = "break";
 }
