@@ -42,6 +42,8 @@ function addOnClick() {
 		chrome.runtime.sendMessage({
 			"command": "endTimer"
 		});
+		document.location = chrome.runtime.getURL("popup.html");
+		chrome.browserAction.setBadgeText({"text" : ""});
 	}
 }
 

@@ -1,14 +1,14 @@
 /**
  * Global Variables
  */
-var timerStates = [
-	{"state": "off", "html": "popup.html"},
-	new PomodoroState(),
-	new BreakState()],
-	stateInd = 0,
-	currentState = timerStates[stateInd],
-	timer,
-	timeout;
+var timerStates = {
+	"off" : {"state": "off", "html": "popup.html", "nextState": "pomodoro"},
+	"pomodoro" : new PomodoroState(),
+	"break" : new BreakState()},
+    stateKey = "off",
+    currentState = timerStates[stateKey],
+    timer,
+    timeout;
 
 /**
  * Executed Initially
@@ -23,17 +23,17 @@ chrome.browserAction.setPopup({
 chrome.runtime.onMessage.addListener(
 	function(request, sender, sendResponse) {
 		// Only start timer if timer was initially off. No delay.
-		if (request.command == "startTimer" && stateInd == 0) {
+		if (request.command === "startTimer" && stateKey === "off") {
 			changeToNextState(false);
 			sendResponse({message: "Timer started."});
 		}
 		// Only clear timers if timer is not off.
-		else if (request.command == "endTimer" && stateInd != 0) {
+		else if (request.command === "endTimer" && stateKey !== "off") {
 			if (timer) clearInterval(timer);
 			if (timeout) clearTimeout(timeout);
 			timeout = null;
 			timer = null;
-			changeState(0, false); // Change to off state
+			changeState("off", false); // Change to off state
 			chrome.runtime.sendMessage({
 				command: "timerEnded"
 			});
@@ -70,6 +70,7 @@ function sendUpdatedTime(difference) {
 		"command": "updateTime",
 		"time": time
 	});
+	chrome.browserAction.setBadgeText({"text" : time});
 }
 
 /**
@@ -101,8 +102,8 @@ function notifyUser() {
  * Called during a change of state during usual flow.
  */
 function changeToNextState(isDelayed) {
-	nextStateInd = currentState.nextState || (stateInd + 1) % timerStates.length;
-	changeState(nextStateInd, isDelayed);
+	nextStateKey = currentState.nextState;
+	changeState(nextStateKey, isDelayed);
 }
 
 /**
@@ -111,9 +112,9 @@ function changeToNextState(isDelayed) {
  * between the pomodoro period is over and the break begins to give user time to
  * wrap up.).
  */
-function changeState(nextStateInd, isDelayed) {
-	stateInd = nextStateInd;
-	currentState = timerStates[stateInd];
+function changeState(nextStateKey, isDelayed) {
+	stateKey = nextStateKey;
+	currentState = timerStates[stateKey];
 	chrome.browserAction.setPopup({
 		"popup": currentState.html
 	});
